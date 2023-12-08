@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 import uuid
 import os
+import shutil
 
 from model import U2NET
 from torch.autograd import Variable
@@ -120,14 +121,16 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Get the image from the request
         image = request.files['image']
-        # Save the image to ./uploads
         image.save('./uploads/'+image.filename)
-        # Return the image filename
-        #imgPath = image # Change this to your image path
         print(removeBg('./uploads/'+image.filename))
-        return render_template('index.html')
+
+        img = os.listdir('static/results/')[-1]
+        #shutil.move('static/results/'+img,'templates/src/'+img)
+
+
+
+        return render_template('index.html', img=img)
         
     
     return render_template('index.html')
